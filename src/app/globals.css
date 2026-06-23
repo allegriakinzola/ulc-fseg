@@ -1,26 +1,151 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* =========================================================
+   FSEG-ULC Design System
+   Charte graphique inspirée de Université Loyola du Congo /
+   ULC-Icam : bleu marine profond + or jésuite + accents
+   ========================================================= */
 
 :root {
+  /* =========================================================
+     Palette officielle FSEG-ULC
+     - Blanc DOMINANT
+     - Rouge foncé    : #8f1913 (signature, panneaux, fond sombres)
+     - Rouge vif      : #b9222b (boutons, accents forts, badges)
+     - Jaune          : #f9b60b (accents vifs, cartes highlight)
+     - Texte foncé    : #1f1414 (corps)
+     ========================================================= */
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1f1414;
+
+  --brand-red: #8f1913;          /* Rouge foncé (signature) */
+  --brand-red-dark: #6c100b;
+  --brand-red-light: #b9222b;    /* Rouge vif (boutons / hover) */
+
+  --brand-gold: #f9b60b;         /* Jaune charte */
+  --brand-gold-light: #fcc94a;
+  --brand-gold-dark: #cf9608;
+
+  /* Alias historiques (utilisés dans tout le code) — recalibrés */
+  --brand-navy: #1f1414;          /* Texte / contrastes — neutre très foncé */
+  --brand-navy-dark: #120a0a;
+  --brand-navy-light: #3a2626;
+
+  --brand-cream: #fff8e8;         /* Crème très claire dérivée du jaune */
+  --brand-muted: #6b6260;       /* Crème (sections douces) */
+
+  --radius: 0.75rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-navy: var(--brand-navy);
+  --color-navy-dark: var(--brand-navy-dark);
+  --color-navy-light: var(--brand-navy-light);
+  --color-brand-red: var(--brand-red);
+  --color-brand-red-dark: var(--brand-red-dark);
+  --color-brand-red-light: var(--brand-red-light);
+  --color-gold: var(--brand-gold);
+  --color-gold-light: var(--brand-gold-light);
+  --color-gold-dark: var(--brand-gold-dark);
+  --color-cream: var(--brand-cream);
+  --color-muted-text: var(--brand-muted);
+
+  --font-sans: var(--font-sans-app);
+  --font-serif: var(--font-serif-app);
+
+  --radius-lg: var(--radius);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans-app), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "ss01", "cv11";
 }
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display-app), var(--font-sans-app), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+/* Trait décoratif rouge bordeaux sous les titres (sur fond clair).
+   Sur fond rouge/foncé, ajouter la classe utilitaire "rule-yellow"
+   pour passer le trait en jaune. */
+.gold-rule::after {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 3px;
+  background: var(--brand-red);
+  margin-top: 0.85rem;
+  border-radius: 999px;
+}
+.gold-rule.rule-yellow::after {
+  background: var(--brand-gold);
+}
+
+.gold-rule.center::after {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Reusable container width */
+.container-x {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  max-width: 80rem;
+}
+@media (min-width: 640px) {
+  .container-x { padding-inline: 1.5rem; }
+}
+@media (min-width: 1024px) {
+  .container-x { padding-inline: 2rem; }
+}
+
+/* =========================================================
+   Tiptap rich editor styles
+   ========================================================= */
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #94a3b8;
+  pointer-events: none;
+  height: 0;
+}
+.tiptap:focus { outline: none; }
+.tiptap img { max-width: 100%; height: auto; display: block; margin: 1rem 0; }
+.tiptap a { color: #8f1913; text-decoration: underline; }
+.tiptap blockquote {
+  border-left: 4px solid #8f1913;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: #475569;
+  font-style: italic;
+}
+.tiptap code {
+  background: #f1f5f9;
+  border-radius: 4px;
+  padding: 0.15em 0.4em;
+  font-size: 0.85em;
+}
+.tiptap pre {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+}
+.tiptap pre code { background: none; padding: 0; color: inherit; }
+

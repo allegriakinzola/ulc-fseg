@@ -1,0 +1,182 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// =====================================================
+// Better Auth tables
+// =====================================================
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          String    @default("user") // "user" | "admin"
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  newsPosts     NewsPost[]
+  inscriptions  Inscription[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("verification")
+}
+
+// =====================================================
+// FSEG content tables
+// =====================================================
+model NewsPost {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  excerpt     String
+  content     String
+  coverImage  String?
+  published   Boolean   @default(true)
+  publishedAt DateTime  @default(now())
+  authorId    String?
+  author      User?     @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("news_post")
+}
+
+model Professor {
+  id        String   @id @default(cuid())
+  fullName  String
+  title     String
+  bio       String?
+  email     String?
+  photo     String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("professor")
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  filename  String
+  mimeType  String
+  data      String
+  size      Int
+  createdAt DateTime @default(now())
+
+  @@map("media")
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+
+  @@map("contact_message")
+}
+
+// =====================================================
+// Inscription / Registration tables
+// =====================================================
+model Inscription {
+  id            String               @id @default(cuid())
+  name          String
+  slug          String               @unique
+  description   String?
+  isActive      Boolean              @default(true)
+  isPriority    Boolean              @default(false)
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  createdById   String?
+  createdBy     User?                @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  registrations StudentRegistration[]
+
+  @@map("inscription")
+}
+
+model StudentRegistration {
+  id                 String      @id @default(cuid())
+  inscriptionId      String
+  inscription        Inscription @relation(fields: [inscriptionId], references: [id], onDelete: Cascade)
+
+  // Étape 1 — Identité
+  nom                String
+  postNom            String
+  prenom             String
+  email              String?
+  telephone          String?
+  dateNaissance      String?
+  lieuNaissance      String?
+  sexe               String?     // "M" | "F"
+  adresse            String?
+  ville              String?
+  pays               String?
+
+  // Étape 2 — Informations académiques
+  niveauEtude        String
+  demandeInscription String?     // "L1" | "L2"
+  filiereMaster      String?
+  decision           Boolean     @default(false)
+
+  createdAt          DateTime    @default(now())
+
+  @@map("student_registration")
+}
+
