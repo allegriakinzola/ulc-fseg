@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 
-const FILIERE_IMAGES = [IMG.finance, IMG.business, IMG.meeting, IMG.conference];
+const FILIERE_IMAGES = ["/programme1.jpg", "/programme2.webp", "/programme3.jpg", "/programme4.webp"];
 
 export const metadata: Metadata = {
   title: "Programmes",
@@ -47,7 +47,7 @@ export default function ProgrammesPage() {
           <div className="lg:col-span-7 space-y-4">
             <div className="relative aspect-[16/9] rounded-2xl overflow-hidden shadow-md mb-4">
               <Image
-                src={IMG.classroom}
+                src="/programme.jpg"
                 alt="Salle de cours en Licence"
                 fill
                 sizes="(max-width: 1024px) 100vw, 60vw"
