@@ -5,14 +5,16 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Menu, X, LayoutDashboard, Newspaper,
-  ClipboardList, LogOut, GraduationCap,
+  ClipboardList, LogOut, Users,
 } from "lucide-react";
+import Image from "next/image";
 import { signOut } from "@/lib/auth-client";
 
 const NAV = [
   { href: "/admin", label: "Tableau de bord", icon: LayoutDashboard, exact: true },
   { href: "/admin/actualites", label: "Actualités", icon: Newspaper },
   { href: "/admin/inscriptions", label: "Inscriptions", icon: ClipboardList },
+  { href: "/admin/utilisateurs", label: "Utilisateurs", icon: Users },
 ];
 
 function SidebarContent({
@@ -29,11 +31,9 @@ function SidebarContent({
       {/* Logo */}
       <div className="px-5 py-5 border-b border-white/10">
         <Link href="/admin" className="flex items-center gap-3" onClick={onNavigate}>
-          <div className="h-9 w-9 rounded-xl bg-[#8f1913] flex items-center justify-center shrink-0">
-            <GraduationCap className="h-5 w-5 text-white" />
-          </div>
+          <Image src="/logoulc.png" alt="Logo ULC" width={36} height={36} className="h-9 w-auto shrink-0" />
           <div>
-            <div className="font-display font-bold text-white text-sm leading-tight">FSEG · ULC</div>
+            <div className="font-display font-bold text-white text-sm leading-tight">ULC · FSEG</div>
             <div className="text-[10px] text-[#f9b60b] font-semibold tracking-[0.15em] uppercase">Administration</div>
           </div>
         </Link>
@@ -113,10 +113,8 @@ export function AdminSidebar({ userName, userEmail }: { userName: string; userEm
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 inset-x-0 z-40 flex items-center justify-between h-14 px-4 bg-[#0f1117] border-b border-white/10 shadow-lg">
         <Link href="/admin" className="flex items-center gap-2.5">
-          <div className="h-7 w-7 rounded-lg bg-[#8f1913] flex items-center justify-center">
-            <GraduationCap className="h-4 w-4 text-white" />
-          </div>
-          <span className="font-display font-bold text-white text-sm">FSEG · ULC</span>
+          <Image src="/logoulc.png" alt="Logo ULC" width={28} height={28} className="h-7 w-auto" />
+          <span className="font-display font-bold text-white text-sm">ULC · FSEG</span>
         </Link>
         <button
           onClick={() => setOpen(true)}
@@ -137,9 +135,7 @@ export function AdminSidebar({ userName, userEmail }: { userName: string; userEm
           <aside className="lg:hidden fixed inset-y-0 left-0 z-50 w-72 bg-[#0f1117] flex flex-col shadow-2xl">
             <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
               <div className="flex items-center gap-2.5">
-                <div className="h-7 w-7 rounded-lg bg-[#8f1913] flex items-center justify-center">
-                  <GraduationCap className="h-4 w-4 text-white" />
-                </div>
+                <Image src="/logoulc.png" alt="Logo ULC" width={28} height={28} className="h-7 w-auto" />
                 <span className="font-display font-bold text-white text-sm">Navigation</span>
               </div>
               <button

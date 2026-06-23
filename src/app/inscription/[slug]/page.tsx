@@ -15,8 +15,8 @@ export async function generateMetadata({
   const { slug } = await params;
   const ins = await prisma.inscription.findUnique({ where: { slug } }).catch(() => null);
   return {
-    title: ins ? `${ins.name} – FSEG-ULC` : "Inscription – FSEG-ULC",
-    description: "Formulaire d'inscription à la Faculté de Sciences Économiques et de Gestion de l'Université Loyola du Congo.",
+    title: ins ? `${ins.name} – ULC-FSEG` : "Inscription – ULC-FSEG",
+    description: "Formulaire d'inscription à la ULC-FSEG, Faculté de Sciences Économiques et de Gestion de l'Université Loyola du Congo.",
   };
 }
 

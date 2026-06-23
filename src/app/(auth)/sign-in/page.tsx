@@ -11,19 +11,19 @@ export default function SignInPage() {
         Connexion
       </h1>
       <p className="mt-2 text-sm text-slate-600">
-        Accédez à votre espace FSEG-ULC.
+        Accédez à votre espace ULC-FSEG.
       </p>
       <div className="mt-8">
         <Suspense fallback={null}>
           <SignInForm />
         </Suspense>
       </div>
-      <p className="mt-6 text-sm text-slate-600">
+      {/* <p className="mt-6 text-sm text-slate-600">
         Pas encore de compte ?{" "}
         <Link href="/sign-up" className="font-semibold text-navy hover:text-gold-dark">
           Créer un compte
         </Link>
-      </p>
+      </p> */}
     </div>
   );
 }

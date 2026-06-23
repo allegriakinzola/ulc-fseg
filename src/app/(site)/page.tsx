@@ -71,7 +71,7 @@ export default async function Home() {
             </div>
             <h1 className="mt-5 font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-white">
               Choisis l&apos;excellence à la{" "}
-              <span className="text-[color:var(--brand-gold)]">FSEG&nbsp;–&nbsp;ULC</span>
+              <span className="text-[color:var(--brand-gold)]">ULC&nbsp;–&nbsp;FSEG</span>
             </h1>
             <p className="mt-6 text-lg text-white/85 max-w-xl leading-relaxed">
               La Faculté de Sciences Économiques et de Gestion de
@@ -107,7 +107,7 @@ export default async function Home() {
               <div className="relative aspect-[4/5] sm:aspect-[5/4] lg:aspect-[4/5] w-full overflow-hidden rounded-3xl shadow-xl">
                 <Image
                   src={"/profile.jpg"}
-                  alt="Étudiants en cours à la FSEG-ULC"
+                  alt="Étudiants en cours à la ULC-FSEG"
                   fill
                   priority
                   sizes="(max-width: 1024px) 100vw, 50vw"

@@ -10,7 +10,7 @@ export default function SignUpPage() {
         Créer un compte
       </h1>
       <p className="mt-2 text-sm text-slate-600">
-        Rejoignez l&apos;espace FSEG-ULC.
+        Rejoignez l&apos;espace ULC-FSEG.
       </p>
       <div className="mt-8">
         <SignUpForm />

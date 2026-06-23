@@ -11,7 +11,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Actualités",
-  description: "Toutes les actualités de la Faculté FSEG-ULC.",
+  description: "Toutes les actualités de la Faculté ULC-FSEG.",
 };
 
 export const dynamic = "force-dynamic";
@@ -32,7 +32,7 @@ export default async function ActualitesPage() {
       <PageHero
         eyebrow="Le journal de la Faculté"
         title="Actualités"
-        subtitle="Toute la vie de la FSEG-ULC : événements, témoignages, communiqués officiels et succès de nos étudiants."
+        subtitle="Toute la vie de la ULC-FSEG : événements, témoignages, communiqués officiels et succès de nos étudiants."
         image={IMG.conference}
       />
 

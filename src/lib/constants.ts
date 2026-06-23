@@ -1,5 +1,5 @@
 export const SITE = {
-  name: "FSEG – ULC",
+  name: "ULC – FSEG",
   fullName:
     "Faculté de Sciences Économiques et de Gestion – Université Loyola du Congo",
   shortDescription:

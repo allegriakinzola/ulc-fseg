@@ -16,7 +16,7 @@ export default function LaFacultePage() {
   return (
     <>
       <PageHero
-        eyebrow="La FSEG-ULC"
+        eyebrow="La ULC-FSEG"
         title="Une faculté au service du développement"
         subtitle="La FSEG forme des leaders compétents, responsables et engagés, capables de transformer les défis socio-économiques de la RDC et d'ailleurs."
         image={IMG.heroCampus}
@@ -31,7 +31,7 @@ export default function LaFacultePage() {
             />
             <div className="mt-8 relative aspect-[4/3] rounded-2xl overflow-hidden shadow-md">
               <Image
-                src={IMG.africanStudents}
+                src="/faculte.jpg"
                 alt="Étudiants en discussion"
                 fill
                 sizes="(max-width: 1024px) 100vw, 40vw"

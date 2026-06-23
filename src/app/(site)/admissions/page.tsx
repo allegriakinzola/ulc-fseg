@@ -52,7 +52,7 @@ export default async function AdmissionsPage() {
     <>
       <PageHero
         eyebrow="Admissions 2025–2026"
-        title="Rejoignez la FSEG-ULC"
+        title="Rejoignez la ULC-FSEG"
         subtitle="Trois étapes simples pour intégrer notre communauté académique d'excellence sur le campus de Kimwenza."
         image={IMG.graduation}
       />
@@ -99,7 +99,7 @@ export default async function AdmissionsPage() {
           <div className="lg:col-span-5">
             <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-lg mb-6">
               <Image
-                src={IMG.handshake}
+                src="/inscription.jpg"
                 alt="Accueil des nouveaux étudiants"
                 fill
                 sizes="(max-width: 1024px) 100vw, 40vw"

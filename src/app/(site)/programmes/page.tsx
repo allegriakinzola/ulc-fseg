@@ -18,7 +18,7 @@ const FILIERE_IMAGES = [IMG.finance, IMG.business, IMG.meeting, IMG.conference];
 export const metadata: Metadata = {
   title: "Programmes",
   description:
-    "Programme de Licence Bac+3 et filières de Master Bac+5 de la FSEG-ULC : Banque & Assurance, Comptabilité & Finance, Entrepreneuriat & PME, Sciences Économiques.",
+    "Programme de Licence Bac+3 et filières de Master Bac+5 de la ULC-FSEG : Banque & Assurance, Comptabilité & Finance, Entrepreneuriat & PME, Sciences Économiques.",
 };
 
 export default function ProgrammesPage() {

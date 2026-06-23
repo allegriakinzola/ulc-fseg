@@ -63,7 +63,7 @@ export default async function AdminDashboard() {
           Tableau de bord
         </h1>
         <p className="mt-1 text-slate-500">
-          Vue d&apos;ensemble de l&apos;espace administrateur FSEG-ULC.
+          Vue d&apos;ensemble de l&apos;espace administrateur ULC-FSEG.
         </p>
       </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { NAV_LINKS, SITE } from "@/lib/constants";
@@ -54,7 +55,7 @@ export function Header() {
           <Logo />
           <div className="leading-tight">
             <div className="font-display text-lg sm:text-xl font-bold tracking-tight text-[color:var(--brand-navy)]">
-              FSEG <span className="text-[color:var(--brand-red)]">·</span> ULC
+               ULC <span className="text-[color:var(--brand-red)]">·</span> FSEG
             </div>
             <div className="hidden sm:block text-[10.5px] uppercase tracking-[0.22em] text-slate-500 font-medium">
               Sciences Économiques &amp; Gestion
@@ -130,9 +131,13 @@ export function Header() {
 
 function Logo() {
   return (
-    <div className="relative h-11 w-11 shrink-0 rounded-xl bg-[color:var(--brand-navy)] text-white flex items-center justify-center shadow-sm">
-      <span className="font-display text-lg font-bold tracking-tight">F</span>
-      <span className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-[color:var(--brand-red)] ring-2 ring-white" />
-    </div>
+    <Image
+      src="/logoulc.png"
+      alt="Logo ULC"
+      width={52}
+      height={52}
+      className="h-12 w-auto shrink-0"
+      priority
+    />
   );
 }
