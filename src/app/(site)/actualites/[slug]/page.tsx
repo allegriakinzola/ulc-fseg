@@ -1,7 +1,7 @@
 import Link from "next/link";
 import NextImage from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, CalendarDays } from "lucide-react";
+import { ArrowLeft, CalendarDays, FileDown } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
@@ -71,6 +71,37 @@ export default async function NewsDetailPage({ params }: PageProps) {
           className="prose prose-slate prose-lg max-w-none prose-headings:font-display prose-headings:text-[#1a1a2e] prose-a:text-[#8f1913] prose-img:rounded-xl prose-img:shadow-md prose-blockquote:border-[#8f1913]"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
+
+        {post.pdfUrl && (
+          <div className="mt-10 rounded-2xl border border-slate-200 bg-slate-50 overflow-hidden">
+            <div className="px-6 py-4 flex items-center justify-between gap-4 border-b border-slate-200">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-[#8f1913]/10 flex items-center justify-center shrink-0">
+                  <FileDown className="h-5 w-5 text-[#8f1913]" />
+                </div>
+                <div>
+                  <div className="font-semibold text-[#1a1a2e] text-sm">Document joint</div>
+                  <div className="text-xs text-slate-500">Fichier PDF</div>
+                </div>
+              </div>
+              <a
+                href={post.pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#8f1913] text-white text-sm font-semibold hover:bg-[#6c100b] transition-colors shrink-0"
+              >
+                <FileDown className="h-4 w-4" /> Télécharger
+              </a>
+            </div>
+            <iframe
+              src={post.pdfUrl + "#toolbar=0&navpanes=0"}
+              className="w-full"
+              style={{ height: "600px", border: "none" }}
+              title="Document PDF"
+            />
+          </div>
+        )}
       </div>
     </article>
   );

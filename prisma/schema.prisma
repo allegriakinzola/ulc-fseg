@@ -86,6 +86,7 @@ model NewsPost {
   excerpt     String
   content     String
   coverImage  String?
+  pdfUrl      String?   @map("pdf_url")
   published   Boolean   @default(true)
   publishedAt DateTime  @default(now())
   authorId    String?
@@ -173,7 +174,7 @@ model StudentRegistration {
   niveauEtude        String
   demandeInscription String?     // "L1" | "L2"
   filiereMaster      String?
-  decision           Boolean     @default(false)
+  statut             String      @default("prospect") // "prospect" | "admis_test" | "inscrit"
 
   createdAt          DateTime    @default(now())
 

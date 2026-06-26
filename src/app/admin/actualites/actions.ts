@@ -33,6 +33,7 @@ export async function createNewsAction(formData: FormData) {
   const content = String(formData.get("content") ?? "").trim();
   const excerpt = autoExcerpt(content);
   const coverImage = String(formData.get("coverImage") ?? "").trim() || null;
+  const pdfUrl = String(formData.get("pdfUrl") ?? "").trim() || null;
   const published = formData.get("published") === "on";
   const publishedAtRaw = String(formData.get("publishedAt") ?? "").trim();
   const publishedAt = publishedAtRaw ? new Date(publishedAtRaw) : new Date();
@@ -53,6 +54,7 @@ export async function createNewsAction(formData: FormData) {
       excerpt,
       content,
       coverImage,
+      pdfUrl,
       published,
       publishedAt,
       authorId: session.user.id,
@@ -71,13 +73,14 @@ export async function updateNewsAction(id: string, formData: FormData) {
   const content = String(formData.get("content") ?? "").trim();
   const excerpt = autoExcerpt(content);
   const coverImage = String(formData.get("coverImage") ?? "").trim() || null;
+  const pdfUrl = String(formData.get("pdfUrl") ?? "").trim() || null;
   const published = formData.get("published") === "on";
   const publishedAtRaw = String(formData.get("publishedAt") ?? "").trim();
   const publishedAt = publishedAtRaw ? new Date(publishedAtRaw) : undefined;
 
   await prisma.newsPost.update({
     where: { id },
-    data: { title, excerpt, content, coverImage, published, ...(publishedAt ? { publishedAt } : {}) },
+    data: { title, excerpt, content, coverImage, pdfUrl, published, ...(publishedAt ? { publishedAt } : {}) },
   });
 
   revalidatePath("/actualites");

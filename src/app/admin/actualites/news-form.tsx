@@ -3,7 +3,7 @@
 import { useState, useRef, useTransition } from "react";
 import Image from "next/image";
 import { RichEditor } from "@/components/ui/rich-editor";
-import { ImagePlus, X, Loader2 } from "lucide-react";
+import { ImagePlus, X, Loader2, FileText } from "lucide-react";
 import { toast } from "@/components/ui/toaster";
 
 type NewsLike = {
@@ -11,6 +11,7 @@ type NewsLike = {
   excerpt: string;
   content: string;
   coverImage: string | null;
+  pdfUrl?: string | null;
   published: boolean;
   publishedAt?: Date | string | null;
 };
@@ -28,8 +29,12 @@ export function NewsForm({
   const [coverPreview, setCoverPreview] = useState<string>(initial?.coverImage ?? "");
   const [coverUploading, setCoverUploading] = useState(false);
   const [coverUrl, setCoverUrl] = useState<string>(initial?.coverImage ?? "");
+  const [pdfName, setPdfName] = useState<string>("");
+  const [pdfUrl, setPdfUrl] = useState<string>(initial?.pdfUrl ?? "");
+  const [pdfUploading, setPdfUploading] = useState(false);
   const [isPending, startTransition] = useTransition();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const pdfInputRef = useRef<HTMLInputElement>(null);
 
   function toDatetimeLocal(val?: Date | string | null): string {
     if (!val) return new Date().toISOString().slice(0, 16);
@@ -63,11 +68,36 @@ export function NewsForm({
     }
   }
 
+  async function handlePdfChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.type !== "application/pdf") { toast("Seuls les fichiers PDF sont acceptés", "error"); return; }
+    setPdfUploading(true);
+    const fd = new FormData();
+    fd.append("file", file);
+    try {
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const data = await res.json() as { url?: string; error?: string };
+      if (data.url) {
+        setPdfUrl(data.url);
+        setPdfName(file.name);
+        toast("PDF uploadé avec succès", "success");
+      } else {
+        toast(data.error ?? "Erreur lors de l'upload", "error");
+      }
+    } catch {
+      toast("Erreur réseau lors de l'upload", "error");
+    } finally {
+      setPdfUploading(false);
+    }
+  }
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     fd.set("content", content);
     fd.set("coverImage", coverUrl);
+    fd.set("pdfUrl", pdfUrl);
     startTransition(async () => {
       await action(fd);
     });
@@ -149,6 +179,58 @@ export function NewsForm({
           required
           defaultValue={toDatetimeLocal(initial?.publishedAt)}
           className="w-full sm:w-auto rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-[#8f1913] focus:ring-2 focus:ring-[#8f1913]/20 focus:outline-none transition-all"
+        />
+      </div>
+
+      {/* PDF attaché */}
+      <div>
+        <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+          Document PDF attaché
+        </label>
+        {pdfUrl ? (
+          <div className="flex items-center gap-3 p-3 rounded-xl border border-emerald-200 bg-emerald-50">
+            <FileText className="h-5 w-5 text-emerald-600 shrink-0" />
+            <span className="text-sm text-emerald-800 font-medium truncate flex-1">
+              {pdfName || "Document PDF"}
+            </span>
+            <a
+              href={pdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-emerald-700 underline hover:text-emerald-900"
+            >
+              Voir
+            </a>
+            <button
+              type="button"
+              onClick={() => { setPdfUrl(""); setPdfName(""); }}
+              className="h-6 w-6 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-700 hover:bg-emerald-300 transition-colors"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => pdfInputRef.current?.click()}
+            disabled={pdfUploading}
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 hover:border-[#8f1913] hover:bg-[#8f1913]/5 transition-all text-slate-500 hover:text-[#8f1913] disabled:opacity-60"
+          >
+            {pdfUploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <FileText className="h-5 w-5" />}
+            <div className="text-left">
+              <div className="text-sm font-medium">
+                {pdfUploading ? "Upload en cours…" : "Cliquer pour joindre un PDF"}
+              </div>
+              <div className="text-xs text-slate-400">PDF — max 20 Mo</div>
+            </div>
+          </button>
+        )}
+        <input
+          ref={pdfInputRef}
+          type="file"
+          accept="application/pdf"
+          className="hidden"
+          onChange={handlePdfChange}
         />
       </div>
 

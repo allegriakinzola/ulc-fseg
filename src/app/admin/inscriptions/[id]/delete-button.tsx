@@ -15,6 +15,7 @@ export function DeleteInscriptionButton({ id }: { id: string }) {
       await fetch(`/api/admin/inscriptions/${id}`, { method: "DELETE" });
       setOpen(false);
       router.push("/admin/inscriptions");
+      router.refresh();
     });
   }
 

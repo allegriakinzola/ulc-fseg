@@ -3,8 +3,9 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import {
   ArrowLeft, User, Phone, Mail, MapPin, Calendar, BookOpen,
-  GraduationCap, CheckCircle2, Building2,
+  GraduationCap, Building2,
 } from "lucide-react";
+import { StatusButton } from "../../status-button";
 import { formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -70,7 +71,7 @@ export default async function StudentDetailPage({
   const initials = student.nom.charAt(0).toUpperCase() + (student.prenom.charAt(0)?.toUpperCase() ?? "");
 
   return (
-    <div className="max-w-3xl space-y-6">
+    <div className="space-y-6">
       {/* Breadcrumb */}
       <div>
         <Link
@@ -146,6 +147,11 @@ export default async function StudentDetailPage({
           <h2 className="font-semibold text-sm text-[#1a1a2e] uppercase tracking-widest">Informations académiques</h2>
         </div>
         <div className="p-5 grid sm:grid-cols-2 gap-4">
+          <div className="sm:col-span-2 rounded-xl border border-slate-100 bg-slate-50 p-4 flex items-center justify-between gap-3">
+            <div className="text-xs font-semibold uppercase tracking-widest text-slate-400">Statut du dossier</div>
+            <StatusButton studentId={student.id} currentStatut={student.statut} />
+          </div>
+
           <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
             <div className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">Niveau d&apos;étude</div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#f9b60b]/15 text-[#cf9608] text-sm font-bold">
@@ -170,15 +176,6 @@ export default async function StudentDetailPage({
             </div>
           )}
 
-          <div className="sm:col-span-2 rounded-xl border border-slate-100 bg-slate-50 p-4 flex items-center gap-3">
-            <CheckCircle2 className={`h-5 w-5 ${student.decision ? "text-emerald-500" : "text-slate-300"}`} />
-            <div>
-              <div className="text-xs font-semibold uppercase tracking-widest text-slate-400">Décision</div>
-              <div className={`text-sm font-semibold ${student.decision ? "text-emerald-600" : "text-slate-400"}`}>
-                {student.decision ? "Je m'inscris — confirmé" : "Non confirmé"}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

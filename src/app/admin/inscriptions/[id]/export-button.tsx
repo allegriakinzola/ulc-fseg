@@ -4,13 +4,16 @@ import { useState } from "react";
 import { FileDown, Loader2 } from "lucide-react";
 import { toast } from "@/components/ui/toaster";
 
-export function ExportButton({ id }: { id: string }) {
+export function ExportButton({ id, statut }: { id: string; statut?: string }) {
   const [loading, setLoading] = useState(false);
 
   async function handleExport() {
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/inscriptions/${id}/export`);
+      const endpoint = statut
+        ? `/api/admin/inscriptions/${id}/export?statut=${statut}`
+        : `/api/admin/inscriptions/${id}/export`;
+      const res = await fetch(endpoint);
       if (!res.ok) throw new Error("Erreur serveur");
       const blob = await res.blob();
       const disposition = res.headers.get("Content-Disposition") ?? "";

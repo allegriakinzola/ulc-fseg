@@ -36,6 +36,7 @@ export default async function EditArticlePage({
             excerpt: post.excerpt,
             content: post.content,
             coverImage: post.coverImage,
+            pdfUrl: post.pdfUrl,
             published: post.published,
             publishedAt: post.publishedAt,
           }}

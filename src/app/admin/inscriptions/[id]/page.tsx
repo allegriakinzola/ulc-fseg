@@ -2,14 +2,16 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import {
-  ArrowLeft, Users, CalendarDays, ExternalLink, ChevronRight, Globe,
+  ArrowLeft, Users, CalendarDays, ExternalLink, ChevronRight, Globe, Filter,
 } from "lucide-react";
+import { StatutBadge } from "./status-button";
 import { formatDate } from "@/lib/utils";
 import { DeleteInscriptionButton } from "./delete-button";
 import { ToggleActiveButton } from "./toggle-button";
 import { CopyLinkButton } from "./copy-link-button";
 import { SetPriorityButton } from "./set-priority-button";
 import { ExportButton } from "./export-button";
+import { NotifyButton } from "./notify-button";
 
 export const dynamic = "force-dynamic";
 
@@ -28,19 +30,32 @@ const FILIERE_LABELS: Record<string, string> = {
   sciences_eco: "Sciences Économiques",
 };
 
+const STATUT_FILTERS = [
+  { value: "", label: "Tous" },
+  { value: "prospect", label: "Prospect" },
+  { value: "admis_test", label: "Admis au test" },
+  { value: "inscrit", label: "Inscrits" },
+];
+
 export default async function InscriptionDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ statut?: string }>;
 }) {
   const { id } = await params;
+  const { statut: statutFilter = "" } = await searchParams;
 
   let inscription;
   try {
     inscription = await prisma.inscription.findUnique({
       where: { id },
       include: {
-        registrations: { orderBy: { createdAt: "desc" } },
+        registrations: {
+          where: statutFilter ? { statut: statutFilter } : undefined,
+          orderBy: { createdAt: "desc" },
+        },
         createdBy: { select: { name: true } },
       },
     });
@@ -53,7 +68,7 @@ export default async function InscriptionDetailPage({
   const publicUrl = `${process.env.BETTER_AUTH_URL ?? "http://localhost:3000"}/inscription/${inscription.slug}`;
 
   return (
-    <div className="space-y-6 max-w-7xl">
+    <div className="space-y-6">
       {/* Breadcrumb + header */}
       <div>
         <Link
@@ -78,7 +93,8 @@ export default async function InscriptionDetailPage({
           <div className="flex items-center gap-2 flex-wrap">
             <SetPriorityButton id={inscription.id} isPriority={inscription.isPriority} />
             <ToggleActiveButton id={inscription.id} isActive={inscription.isActive} />
-            <ExportButton id={inscription.id} />
+            <NotifyButton inscriptionId={inscription.id} inscriptionName={inscription.name} />
+            <ExportButton id={inscription.id} statut={statutFilter || undefined} />
             <DeleteInscriptionButton id={inscription.id} />
           </div>
         </div>
@@ -142,11 +158,29 @@ export default async function InscriptionDetailPage({
         </div>
       </div>
 
+      {/* Filter bar */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <Filter className="h-4 w-4 text-slate-400 shrink-0" />
+        {STATUT_FILTERS.map((f) => (
+          <Link
+            key={f.value}
+            href={f.value ? `/admin/inscriptions/${id}?statut=${f.value}` : `/admin/inscriptions/${id}`}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-colors ${
+              statutFilter === f.value
+                ? "bg-[#8f1913] text-white border-[#8f1913]"
+                : "bg-white text-slate-600 border-slate-200 hover:border-[#8f1913] hover:text-[#8f1913]"
+            }`}
+          >
+            {f.label}
+          </Link>
+        ))}
+      </div>
+
       {/* Students list */}
       <div className="rounded-2xl bg-white border border-slate-200/80 shadow-sm overflow-hidden">
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
           <h2 className="font-display font-semibold text-[#1a1a2e]">
-            Liste des étudiants
+            {statutFilter ? STATUT_FILTERS.find(f => f.value === statutFilter)?.label : "Tous les étudiants"}
             <span className="ml-2 inline-flex items-center justify-center h-5 min-w-5 px-1.5 rounded-full bg-[#8f1913]/10 text-[#8f1913] text-xs font-bold">
               {inscription.registrations.length}
             </span>
@@ -172,6 +206,7 @@ export default async function InscriptionDetailPage({
                     <th className="px-5 py-3">Niveau</th>
                     <th className="px-5 py-3">Demande</th>
                     <th className="px-5 py-3">Filière</th>
+                    <th className="px-5 py-3">Statut</th>
                     <th className="px-5 py-3">Inscrit le</th>
                     <th className="px-5 py-3"></th>
                   </tr>
@@ -218,6 +253,9 @@ export default async function InscriptionDetailPage({
                       </td>
                       <td className="px-5 py-3.5 text-slate-500 text-xs whitespace-nowrap">
                         {r.filiereMaster ? (FILIERE_LABELS[r.filiereMaster] ?? r.filiereMaster) : "—"}
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <StatutBadge statut={r.statut} />
                       </td>
                       <td className="px-5 py-3.5 text-slate-400 text-xs whitespace-nowrap">
                         {formatDate(r.createdAt)}

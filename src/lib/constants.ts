@@ -30,6 +30,7 @@ export const NAV_LINKS = [
   { href: "/programmes", label: "Programmes" },
   { href: "/admissions", label: "Admissions" },
   { href: "/actualites", label: "Actualités" },
+  { href: "/resultats", label: "Résultats" },
   { href: "/contact", label: "Contact" },
 ] as const;
 

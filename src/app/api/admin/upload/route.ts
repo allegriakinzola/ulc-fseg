@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-const MAX_SIZE = 8 * 1024 * 1024; // 8 MB
+const MAX_SIZE = 20 * 1024 * 1024; // 20 MB
 
 export async function POST(req: NextRequest) {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   const file = formData.get("file") as File | null;
 
   if (!file) return NextResponse.json({ error: "Fichier manquant" }, { status: 400 });
-  if (file.size > MAX_SIZE) return NextResponse.json({ error: "Fichier trop grand (max 8 Mo)" }, { status: 413 });
+  if (file.size > MAX_SIZE) return NextResponse.json({ error: "Fichier trop grand (max 20 Mo)" }, { status: 413 });
 
   const arrayBuffer = await file.arrayBuffer();
   const base64 = Buffer.from(arrayBuffer).toString("base64");

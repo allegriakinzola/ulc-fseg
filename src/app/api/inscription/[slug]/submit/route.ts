@@ -43,7 +43,6 @@ export async function POST(
       niveauEtude: body.niveauEtude,
       demandeInscription: body.demandeInscription || null,
       filiereMaster: body.filiereMaster || null,
-      decision: Boolean(body.decision),
     },
   });
 

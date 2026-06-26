@@ -57,7 +57,7 @@ export default async function AdminDashboard() {
   } catch {}
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <div className="space-y-6">
       <div>
         <h1 className="font-display text-3xl font-semibold text-[#1a1a2e]">
           Tableau de bord
