@@ -108,7 +108,42 @@ export default async function ResultatsPage() {
                   </div>
                 </div>
 
-                <div className="overflow-x-auto">
+                {/* Vue mobile : cards */}
+                <div className="sm:hidden divide-y divide-slate-100">
+                  {inscription.registrations.map((r, i) => (
+                    <div key={r.id} className="px-4 py-3.5 flex items-start gap-3">
+                      <div className="h-9 w-9 rounded-full bg-[#8f1913]/10 flex items-center justify-center shrink-0 mt-0.5">
+                        <span className="text-xs font-bold text-[#8f1913]">
+                          {r.nom.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs text-slate-400 font-medium">#{i + 1}</span>
+                          <span className="font-semibold text-[#1a1a2e] text-sm leading-snug">
+                            {r.nom} {r.postNom} {r.prenom}
+                          </span>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold">
+                            Inscrit
+                          </span>
+                        </div>
+                        <div className="mt-1.5 flex flex-wrap gap-1.5">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[#f9b60b]/15 text-[#cf9608] text-xs font-semibold">
+                            {NIVEAU_LABELS[r.niveauEtude] ?? r.niveauEtude}
+                          </span>
+                          <span className="text-xs text-slate-500">
+                            {r.filiereMaster
+                              ? (FILIERE_LABELS[r.filiereMaster] ?? r.filiereMaster)
+                              : (r.demandeInscription ?? "—")}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Vue desktop : tableau */}
+                <div className="hidden sm:block overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead className="bg-slate-50 border-b border-slate-200">
                       <tr className="text-left text-xs font-semibold uppercase tracking-widest text-slate-500">
