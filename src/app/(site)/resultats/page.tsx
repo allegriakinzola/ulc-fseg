@@ -108,86 +108,60 @@ export default async function ResultatsPage() {
                   </div>
                 </div>
 
-                {/* Vue mobile : cards */}
-                <div className="sm:hidden divide-y divide-slate-100">
-                  {inscription.registrations.map((r, i) => (
-                    <div key={r.id} className="px-4 py-3.5 flex items-start gap-3">
-                      <div className="h-9 w-9 rounded-full bg-[#8f1913]/10 flex items-center justify-center shrink-0 mt-0.5">
-                        <span className="text-xs font-bold text-[#8f1913]">
-                          {r.nom.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-xs text-slate-400 font-medium">#{i + 1}</span>
-                          <span className="font-semibold text-[#1a1a2e] text-sm leading-snug">
-                            {r.nom} {r.postNom} {r.prenom}
-                          </span>
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold">
-                            Inscrit
-                          </span>
-                        </div>
-                        <div className="mt-1.5 flex flex-wrap gap-1.5">
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[#f9b60b]/15 text-[#cf9608] text-xs font-semibold">
-                            {NIVEAU_LABELS[r.niveauEtude] ?? r.niveauEtude}
-                          </span>
-                          <span className="text-xs text-slate-500">
-                            {r.filiereMaster
-                              ? (FILIERE_LABELS[r.filiereMaster] ?? r.filiereMaster)
-                              : (r.demandeInscription ?? "—")}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Vue desktop : tableau */}
-                <div className="hidden sm:block overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead className="bg-slate-50 border-b border-slate-200">
-                      <tr className="text-left text-xs font-semibold uppercase tracking-widest text-slate-500">
-                        <th className="px-5 py-3">#</th>
-                        <th className="px-5 py-3">Nom complet</th>
-                        <th className="px-5 py-3">Niveau</th>
-                        <th className="px-5 py-3">Filière</th>
-                        <th className="px-5 py-3">Statut</th>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm border-collapse">
+                    <thead>
+                      <tr className="bg-[#1d6038] text-white text-xs font-bold uppercase tracking-wider">
+                        <th className="border border-[#165030] px-3 py-2.5 text-center w-12">#</th>
+                        <th className="border border-[#165030] px-4 py-2.5 text-left">Nom</th>
+                        <th className="border border-[#165030] px-4 py-2.5 text-left">Post-Nom</th>
+                        <th className="border border-[#165030] px-4 py-2.5 text-left">Prénom</th>
+                        <th className="border border-[#165030] px-4 py-2.5 text-left">Niveau d&apos;étude</th>
+                        <th className="border border-[#165030] px-4 py-2.5 text-left">Filière / Demande</th>
+                        <th className="border border-[#165030] px-4 py-2.5 text-center">Statut</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody>
                       {inscription.registrations.map((r, i) => (
-                        <tr key={r.id} className="hover:bg-slate-50/60 transition-colors">
-                          <td className="px-5 py-3.5 text-slate-400 text-xs font-medium">{i + 1}</td>
-                          <td className="px-5 py-3.5">
-                            <div className="flex items-center gap-3">
-                              <div className="h-8 w-8 rounded-full bg-[#8f1913]/10 flex items-center justify-center shrink-0">
-                                <span className="text-xs font-bold text-[#8f1913]">
-                                  {r.nom.charAt(0).toUpperCase()}
-                                </span>
-                              </div>
-                              <span className="font-semibold text-[#1a1a2e]">
-                                {r.nom} {r.postNom} {r.prenom}
-                              </span>
-                            </div>
+                        <tr
+                          key={r.id}
+                          className={i % 2 === 0 ? "bg-white hover:bg-[#e8f5e9]" : "bg-[#f0faf3] hover:bg-[#e8f5e9]"}
+                        >
+                          <td className="border border-slate-300 px-3 py-2 text-center text-xs font-bold text-slate-400 bg-[#f5f5f5]">
+                            {i + 1}
                           </td>
-                          <td className="px-5 py-3.5">
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[#f9b60b]/15 text-[#cf9608] text-xs font-semibold whitespace-nowrap">
-                              {NIVEAU_LABELS[r.niveauEtude] ?? r.niveauEtude}
-                            </span>
+                          <td className="border border-slate-300 px-4 py-2 font-semibold text-[#1a1a2e] whitespace-nowrap">
+                            {r.nom}
                           </td>
-                          <td className="px-5 py-3.5 text-slate-500 text-sm">
+                          <td className="border border-slate-300 px-4 py-2 text-[#1a1a2e] whitespace-nowrap">
+                            {r.postNom}
+                          </td>
+                          <td className="border border-slate-300 px-4 py-2 text-[#1a1a2e] whitespace-nowrap">
+                            {r.prenom}
+                          </td>
+                          <td className="border border-slate-300 px-4 py-2 text-slate-700 whitespace-nowrap">
+                            {NIVEAU_LABELS[r.niveauEtude] ?? r.niveauEtude}
+                          </td>
+                          <td className="border border-slate-300 px-4 py-2 text-slate-600">
                             {r.filiereMaster
                               ? (FILIERE_LABELS[r.filiereMaster] ?? r.filiereMaster)
                               : (r.demandeInscription ?? "—")}
                           </td>
-                          <td className="px-5 py-3.5">
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold">
-                              Inscrit
+                          <td className="border border-slate-300 px-4 py-2 text-center">
+                            <span className="inline-block bg-[#d1fae5] text-[#065f46] text-xs font-bold px-2.5 py-0.5 rounded">
+                              Inscrit ✓
                             </span>
                           </td>
                         </tr>
                       ))}
                     </tbody>
+                    <tfoot>
+                      <tr className="bg-[#f5f5f5]">
+                        <td colSpan={7} className="border border-slate-300 px-4 py-2 text-xs text-slate-500 font-semibold">
+                          Total : {inscription.registrations.length} étudiant{inscription.registrations.length > 1 ? "s" : ""} inscrit{inscription.registrations.length > 1 ? "s" : ""}
+                        </td>
+                      </tr>
+                    </tfoot>
                   </table>
                 </div>
               </div>
