@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, ArrowLeft, Loader2, CheckCircle2 } from "lucide-react";
+import { ArrowRight, ArrowLeft, Loader2, CheckCircle2, FileDown } from "lucide-react";
 
 type Step1 = {
   nom: string; postNom: string; prenom: string; email: string;
@@ -54,6 +54,7 @@ export function InscriptionForm({ slug }: { slug: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [submittedData, setSubmittedData] = useState<{ s1: Step1; s2: Step2 } | null>(null);
 
 
   function upS1(field: keyof Step1, val: string) {
@@ -87,12 +88,97 @@ export function InscriptionForm({ slug }: { slug: string }) {
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? "Une erreur est survenue."); }
-      else { setSubmitted(true); window.scrollTo({ top: 0, behavior: "smooth" }); }
+      else { setSubmittedData({ s1, s2 }); setSubmitted(true); window.scrollTo({ top: 0, behavior: "smooth" }); }
     } catch {
       setError("Erreur réseau. Veuillez réessayer.");
     } finally {
       setLoading(false);
     }
+  }
+
+  function downloadPdf() {
+    if (!submittedData) return;
+    const { s1, s2 } = submittedData;
+    const NIVEAUX_MAP: Record<string, string> = {
+      diplome_etat: "Diplôme d'État", graduat: "Graduat",
+      licence_bac3: "Licence (Bac+3)", licence_bac5: "Licence (Bac+5)", master_bac5: "Master (Bac+5)",
+    };
+    const FILIERES_MAP: Record<string, string> = {
+      banque_assurance: "Banque & Assurance", comptabilite_finance: "Comptabilité & Finance",
+      entrepreneuriat_pme: "Entrepreneuriat & Gestion des PME", sciences_eco: "Sciences Économiques",
+    };
+    const row = (label: string, value: string) =>
+      value ? `<tr><td class="lbl">${label}</td><td class="val">${value}</td></tr>` : "";
+    const html = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fiche d'inscription</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Segoe UI',Arial,sans-serif; color:#1a1a2e; padding:32px 40px; font-size:13px; }
+    .header { display:flex; align-items:center; justify-content:space-between; border-bottom:3px solid #8f1913; padding-bottom:14px; margin-bottom:24px; }
+    .header h1 { font-size:20px; font-weight:700; color:#8f1913; }
+    .header p { font-size:12px; color:#555; margin-top:2px; }
+    .badge-confirm { display:inline-block; background:#d1fae5; color:#065f46; padding:3px 12px; border-radius:99px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; margin-bottom:20px; }
+    .section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:#8f1913; background:#8f1913/10; border-left:3px solid #8f1913; padding:4px 10px; margin:20px 0 10px; background-color:#f9f0ef; }
+    table { width:100%; border-collapse:collapse; }
+    tr { border-bottom:1px solid #eee; }
+    td.lbl { padding:7px 10px; font-weight:600; color:#555; width:42%; font-size:12px; }
+    td.val { padding:7px 10px; color:#1a1a2e; font-size:13px; }
+    .footer { margin-top:28px; border-top:1px solid #ddd; padding-top:12px; font-size:11px; color:#999; display:flex; justify-content:space-between; }
+    @page { margin:1.5cm 2cm; size:A4; }
+    @media print { body { padding:0; } }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <h1>Faculté des Sciences Économiques et de Gestion</h1>
+      <p>Université Loyola du Congo — Campus de Kimwenza, Kinshasa</p>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:17px;font-weight:700;color:#8f1913;">FSEG – ULC</div>
+      <div style="font-size:11px;color:#888;">Fiche de préinscription</div>
+    </div>
+  </div>
+
+  <div class="badge-confirm">✓ Inscription enregistrée</div>
+
+  <div class="section-title">Informations personnelles</div>
+  <table>
+    ${row("Nom", s1.nom)}
+    ${row("Post-Nom", s1.postNom)}
+    ${row("Prénom", s1.prenom)}
+    ${row("Sexe", s1.sexe === "M" ? "Masculin" : s1.sexe === "F" ? "Féminin" : "")}
+    ${row("Date de naissance", s1.dateNaissance)}
+    ${row("Lieu de naissance", s1.lieuNaissance)}
+    ${row("Adresse", s1.adresse)}
+    ${row("Ville", s1.ville)}
+    ${row("Pays", s1.pays)}
+    ${row("E-mail", s1.email)}
+    ${row("Téléphone", s1.telephone)}
+  </table>
+
+  <div class="section-title">Informations académiques</div>
+  <table>
+    ${row("Niveau d'étude", NIVEAUX_MAP[s2.niveauEtude] ?? s2.niveauEtude)}
+    ${row("Demande d'inscription", s2.demandeInscription)}
+    ${row("Filière Master souhaitée", s2.filiereMaster ? (FILIERES_MAP[s2.filiereMaster] ?? s2.filiereMaster) : "")}
+  </table>
+
+  <div class="footer">
+    <span>Document généré automatiquement — ULC-FSEG</span>
+    <span>Date : ${new Date().toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}</span>
+  </div>
+
+  <script>window.onload = () => { window.print(); }<\/script>
+</body>
+</html>`;
+    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const win = window.open(url, "_blank");
+    if (win) win.addEventListener("afterprint", () => URL.revokeObjectURL(url));
   }
 
   if (submitted) {
@@ -107,6 +193,12 @@ export function InscriptionForm({ slug }: { slug: string }) {
         <p className="mt-3 text-slate-600 max-w-md mx-auto">
           Votre demande d&apos;inscription a bien été reçue. Notre équipe vous contactera prochainement.
         </p>
+        <button
+          onClick={downloadPdf}
+          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#8f1913] text-white font-semibold py-2.5 px-6 hover:bg-[#6c100b] transition"
+        >
+          <FileDown className="h-4 w-4" /> Télécharger ma fiche PDF
+        </button>
         <p className="mt-4 text-sm text-slate-500">
           Pour toute question : <a href="tel:+243891124108" className="font-semibold text-[#8f1913] hover:underline">+243 891 124 108</a>
         </p>

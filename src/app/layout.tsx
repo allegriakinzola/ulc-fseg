@@ -25,6 +25,10 @@ export const metadata: Metadata = {
   },
   description: SITE.shortDescription,
   metadataBase: new URL("https://fseg.uloyola.cd"),
+  icons: {
+    icon: "/logoulc.png",
+    apple: "/logoulc.png",
+  },
   openGraph: {
     title: SITE.fullName,
     description: SITE.shortDescription,
